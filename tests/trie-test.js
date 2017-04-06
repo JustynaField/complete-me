@@ -34,11 +34,10 @@ describe('Trie', () => {
     assert.equal(trie.root.children.r.children.a.children.y.isWord, true)
   })
 
-  it('should not recognize it as a word', () => {
+  it('should not define word if it is not on the last node', () => {
     let word = 'ray'
 
     trie.insert(word)
-
     assert.equal(trie.root.children.r.isWord, false)
   })
 
@@ -65,6 +64,11 @@ describe('Trie', () => {
     assert.isFunction(trie.suggest)
   })
 
+  it('should return an array', () => {
+
+    assert.equal(Array.isArray(trie.suggestions), true)
+  })
+
   it('should return words on suggestions', () => {
     trie.insert('pizza')
     trie.suggest('piz')
@@ -72,11 +76,22 @@ describe('Trie', () => {
     assert.deepEqual(trie.suggestions, ['pizza'])
   })
 
+  it('should give multiple suggestions on a word', () => {
+    let trie = new Trie()
+
+    trie.insert('art')
+    trie.insert('artist')
+    trie.insert('army')
+    trie.insert('armenia')
+
+    trie.suggest('ar')
+    assert.deepEqual(trie.suggestions, ['art', 'artist', 'army', 'armenia'])
+  })
+
   it('should include dictionary', () => {
     trie.populate()
 
     assert.equal(trie.count, 235888)
   })
-
 
 })

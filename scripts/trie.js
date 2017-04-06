@@ -44,19 +44,22 @@ export default class Trie {
     return this.find(currentNode, input)
   }
 
-  find (currentNode, word) {
-    let inputKeys = Object.keys(currentNode.children)
+  find (currentNode, input) {
+    let furtherNode = Object.keys(currentNode.children)
 
     if (currentNode.isWord === true) {
-      this.suggestions.push(word)
+      this.suggestions.push(input)
     }
 
-    for (var i = 0; i < inputKeys.length; i++) {
-      let node = currentNode.children[inputKeys[i]]
+    for (var i = 0; i < furtherNode.length; i++) {
+      let nextNode = currentNode.children[furtherNode[i]]
 
-      this.find(node, word + inputKeys[i])
+      this.find(nextNode, input + furtherNode[i])
     }
+    return this.suggestions
   }
+
+
 
   populate() {
     dictionary.forEach(i => {
