@@ -60,27 +60,23 @@ describe('Trie', () => {
     assert.isFunction(trie.find)
   })
 
-  it('should find a node', () => {
-    trie.insert('ber')
-    trie.insert('berth')
-
-    assert.deepEqual(
-      trie.find('ber'),  trie.root.children['b'].children['e'].children['r']
-    )
-  })
-
   it('should have a method called suggest', () => {
 
     assert.isFunction(trie.suggest)
   })
 
-  it('should have a method called suggest', () => {
+  it('should return words on suggestions', () => {
+    trie.insert('pizza')
+    trie.suggest('piz')
 
-    trie.suggest('pizza')
-    assert.isFunction(trie.suggest)
+    assert.deepEqual(trie.suggestions, ['pizza'])
   })
 
+  it('should include dictionary', () => {
+    trie.populate()
 
+    assert.equal(trie.count, 235888)
+  })
 
 
 })

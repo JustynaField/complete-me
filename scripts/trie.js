@@ -1,5 +1,8 @@
 import Node from './Node'
 require('locus')
+const text = "/usr/share/dict/words"
+var fs = require('fs')
+let dictionary = fs.readFileSync(text).toString().trim().split('\n')
 
 
 export default class Trie {
@@ -34,23 +37,30 @@ export default class Trie {
     for (var i = 0; i < input.length; i++) {
       let letter = input.charAt(i)
 
-      if(currentNode.children[letter]) {
-        currentNode = currentNode[letter]
+      if (currentNode.children[letter]) {
+        currentNode = currentNode.children[letter]
       }
-    return find(userInput, currentNode)
+    }
+    return this.find(currentNode, input)
   }
 
-  find (userInput, currentNode) {
-    let inputKeys = Object.keys(currentNode)
+  find (currentNode, word) {
+    let inputKeys = Object.keys(currentNode.children)
 
-    if(currentNode.isWord = true) {
-      this.suggestions.push(userInput)
+    if (currentNode.isWord === true) {
+      this.suggestions.push(word)
     }
 
     for (var i = 0; i < inputKeys.length; i++) {
       let node = currentNode.children[inputKeys[i]]
-      this.find(node, userInput + inputKeys[i])
+
+      this.find(node, word + inputKeys[i])
     }
   }
 
+  populate() {
+    dictionary.forEach(i => {
+      this.insert(i)
+    })
+  }
 }
