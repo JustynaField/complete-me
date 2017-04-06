@@ -10,6 +10,7 @@ export default class Trie {
     this.root  = new Node('')
     this.count = 0
     this.suggestions = []
+    this.prefSuggestions = []
   }
 
   insert(word) {
@@ -23,7 +24,6 @@ export default class Trie {
         currentNode.children[letter] = new Node(letter)
         currentNode = currentNode.children[letter]
       }
-
       if (letters.length - 1 === index) {
         currentNode.isWord = true
         this.count++
@@ -59,7 +59,21 @@ export default class Trie {
     return this.suggestions
   }
 
+  select () {
+    //create a counter (e.g. numUsed) for each word, showing how often it's used
 
+    //loop through suggestions - compare counters of suggested words
+    //if counter is high (e.g. > 3), then push frequent word to the prefSuggestions array
+    this.suggestions.filter(word => {
+      if(numUsed > 3) {
+        this.prefSuggestions.push(word)
+      }
+    })
+
+    //in the find function - return prefSuggestions, before suggestions
+
+    //you can loop through prefSuggestions array and order it in decreasing order based on counter value
+  }
 
   populate() {
     dictionary.forEach(i => {
