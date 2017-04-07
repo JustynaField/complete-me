@@ -9,7 +9,7 @@ export default class Trie {
   constructor() {
     this.root  = new Node('')
     this.count = 0
-    this.suggestions = []
+    // this.suggestions = []
   }
 
   insert(word) {
@@ -40,62 +40,60 @@ export default class Trie {
         currentNode = currentNode.children[letter]
       }
     }
+    // console.log('consoled:',this.find(currentNode, input))
     return this.find(currentNode, input)
   }
 
-  find (currentNode, word) {
+  find (currentNode, input, currentArray) {
     let furtherNode = Object.keys(currentNode.children)
+    let array2 = currentArray || []
 
     if (currentNode.isWord === true) {
-      this.suggestions.push(word)
-      currentNode.numUsed++
-      // this.prioritySuggestions(this.suggestions)
+      array2.push({numUsed: currentNode.numUsed, input})
     }
 
     for (var i = 0; i < furtherNode.length; i++) {
       let nextNode = currentNode.children[furtherNode[i]]
 
-      this.find(nextNode, word + furtherNode[i])
+      this.find(nextNode, input + furtherNode[i], array2)
     }
-    // return this.suggestions
-    return this.prioritySuggestions(this.suggestions)
-    // return this.bubbleSort(suggestions)
+
+    var suggestions = this.prioritySuggestions(array2)
+
+    return suggestions
+  }
+
+
+
+  select (input) {
+    let currentNode = this.root
+
+    for (var i = 0; i < input.length; i++) {
+      let letter = input.charAt(i)
+
+      if (currentNode.children[letter]) {
+        currentNode = currentNode.children[letter]
+      }
+    }
+
+    if (currentNode.isWord === true) {
+      currentNode.numUsed++
+    }
+
   }
 
   prioritySuggestions (array) {
-    for (let i = 0; i < array.length; i++) {
-      for (let j = 1; j < array.length; j++) {
 
-        if (array[j] > array[j - 1]) {
-          let temp = array[j]
+    let sortedSuggestions = array.sort((valueA, valueB) => {
+      return valueB['numUsed'] - valueA['numUsed']
+    })
+    let mapped = sortedSuggestions.map((val) => {
+      return val['input']
+    })
 
-          array[j] = array[j - 1]
-          array[j - 1] = temp
-        }
-      }
-    }
-    return array
+    return mapped
+
   }
-
-
-    // select (input) {
-    //   let currentNode = this.root
-    //
-    //   for (var i = 0; i < input.length; i++) {
-    //     let letter = input.charAt(i)
-    //
-    //     if (currentNode.children[letter]) {
-    //       currentNode = currentNode.children[letter]
-    //     }
-    //   }
-    //   let furtherNode = Object.keys(currentNode.children)
-    //
-    //   if (currentNode.isWord === true) {
-    //     currentNode.numUsed++
-    //   }
-    //
-    // }
-
 
   populate() {
     dictionary.forEach(i => {

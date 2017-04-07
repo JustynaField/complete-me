@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import Trie from '../scripts/trie'
 import Node from '../scripts/node'
-require('locus')
+var locus = require('locus')
 
 describe('Trie', () => {
   var trie = new Trie()
@@ -64,19 +64,19 @@ describe('Trie', () => {
     assert.isFunction(trie.suggest)
   })
 
-  it('should return an array', () => {
+  it.skip('should return an array', () => {
 
     assert.equal(Array.isArray(trie.suggestions), true)
   })
 
-  it('should return words on suggestions', () => {
+  it.skip('should return words on suggestions', () => {
     trie.insert('pizza')
     trie.suggest('piz')
 
     assert.deepEqual(trie.suggestions, ['pizza'])
   })
 
-  it('should give multiple suggestions on a word', () => {
+  it.skip('should give multiple suggestions on a word', () => {
     let trie = new Trie()
 
     trie.insert('art')
@@ -84,28 +84,36 @@ describe('Trie', () => {
     trie.insert('army')
     trie.insert('armenia')
 
+    // eval(locus)
+
     trie.suggest('ar')
     assert.deepEqual(trie.suggestions, ['artist', 'art', 'army', 'armenia'])
   })
 
-  // it.skip('should include dictionary', () => {
-  //   trie.populate()
-  //   assert.equal(trie.count, 235888)
-  // })
+  it.skip('should include dictionary', () => {
+    trie.populate()
+    assert.equal(trie.count, 235888)
+  })
 
-  it.skip('should recommend suggestions based on how often we use given word', () => {
+  it('should recommend suggestions based on how often we use given word', () => {
     var trie = new Trie()
 
     trie.insert('alaska')
     trie.insert('alabama')
     trie.insert('alpharetta')
-    trie.insert('alaska')
     trie.insert('albania')
-    trie.insert('alabama')
-    trie.insert('alaska')
 
-    trie.suggest('al')
-    assert.deepEqual(trie.suggestions, ['alaska', 'alabama', 'albania', 'alpharetta'])
+    trie.select('alaska')
+    trie.select('alabama')
+    trie.select('alpharetta')
+    trie.select('alaska')
+    trie.select('albania')
+    trie.select('alabama')
+    trie.select('alaska')
+
+    let result = trie.suggest('al')
+
+    assert.deepEqual(result, ['alaska', 'alabama', 'alpharetta',  'albania'])
   })
 
 })
