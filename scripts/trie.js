@@ -10,7 +10,6 @@ export default class Trie {
     this.root  = new Node('')
     this.count = 0
     this.suggestions = []
-    this.prefSuggestions = []
   }
 
   insert(word) {
@@ -44,36 +43,59 @@ export default class Trie {
     return this.find(currentNode, input)
   }
 
-  find (currentNode, input) {
+  find (currentNode, word) {
     let furtherNode = Object.keys(currentNode.children)
 
     if (currentNode.isWord === true) {
-      this.suggestions.push(input)
+      this.suggestions.push(word)
+      currentNode.numUsed++
+      // this.prioritySuggestions(this.suggestions)
     }
 
     for (var i = 0; i < furtherNode.length; i++) {
       let nextNode = currentNode.children[furtherNode[i]]
 
-      this.find(nextNode, input + furtherNode[i])
+      this.find(nextNode, word + furtherNode[i])
     }
-    return this.suggestions
+    // return this.suggestions
+    return this.prioritySuggestions(this.suggestions)
+    // return this.bubbleSort(suggestions)
   }
 
-  select () {
-    //create a counter (e.g. numUsed) for each word, showing how often it's used
+  prioritySuggestions (array) {
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 1; j < array.length; j++) {
 
-    //loop through suggestions - compare counters of suggested words
-    //if counter is high (e.g. > 3), then push frequent word to the prefSuggestions array
-    this.suggestions.filter(word => {
-      if(numUsed > 3) {
-        this.prefSuggestions.push(word)
+        if (array[j] > array[j - 1]) {
+          let temp = array[j]
+
+          array[j] = array[j - 1]
+          array[j - 1] = temp
+        }
       }
-    })
-
-    //in the find function - return prefSuggestions, before suggestions
-
-    //you can loop through prefSuggestions array and order it in decreasing order based on counter value
+    }
+    return array
   }
+
+
+    // select (input) {
+    //   let currentNode = this.root
+    //
+    //   for (var i = 0; i < input.length; i++) {
+    //     let letter = input.charAt(i)
+    //
+    //     if (currentNode.children[letter]) {
+    //       currentNode = currentNode.children[letter]
+    //     }
+    //   }
+    //   let furtherNode = Object.keys(currentNode.children)
+    //
+    //   if (currentNode.isWord === true) {
+    //     currentNode.numUsed++
+    //   }
+    //
+    // }
+
 
   populate() {
     dictionary.forEach(i => {

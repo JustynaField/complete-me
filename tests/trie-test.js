@@ -85,13 +85,27 @@ describe('Trie', () => {
     trie.insert('armenia')
 
     trie.suggest('ar')
-    assert.deepEqual(trie.suggestions, ['art', 'artist', 'army', 'armenia'])
+    assert.deepEqual(trie.suggestions, ['artist', 'art', 'army', 'armenia'])
   })
 
-  it('should include dictionary', () => {
-    trie.populate()
+  // it.skip('should include dictionary', () => {
+  //   trie.populate()
+  //   assert.equal(trie.count, 235888)
+  // })
 
-    assert.equal(trie.count, 235888)
+  it.skip('should recommend suggestions based on how often we use given word', () => {
+    var trie = new Trie()
+
+    trie.insert('alaska')
+    trie.insert('alabama')
+    trie.insert('alpharetta')
+    trie.insert('alaska')
+    trie.insert('albania')
+    trie.insert('alabama')
+    trie.insert('alaska')
+
+    trie.suggest('al')
+    assert.deepEqual(trie.suggestions, ['alaska', 'alabama', 'albania', 'alpharetta'])
   })
 
 })
